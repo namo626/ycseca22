@@ -1,12 +1,15 @@
-\documentclass[10pt]{beamer}
+\documentclass[10pt]{oden_beamer}
 %Information to be included in the title page:
 \title{Numerical Simulation of Compound Flooding using Parametric Rainfall Models}
 \author{Chayanon (Namo) Wichitrnithed, Eirik Valseth, Younghun Kang, Mackenzie Hudson, Ethan Kubatko, Clint Dawson}
 \institute{UT Austin - Oden Institute for Computational Engineering and Sciences, Ohio State University}
 \date{November 2022}
 
-\usetheme{Madrid}
+\usepackage{caption}
+
+%\usetheme{Madrid}
 \newcommand\dt[1]{\frac{\partial #1}{\partial t}}
+\newcommand\Dt[1]{\frac{d #1}{dt}}
 \newcommand\dx[1]{\frac{\partial #1}{\partial x}}
 \newcommand\dy[1]{\frac{\partial #1}{\partial y}}
 
@@ -15,17 +18,45 @@
 \frame{\titlepage}
 
 \begin{frame}
-\frametitle{Compound Flooding}
-This is some text in the first frame. This is some text in the first frame. This is some text in the first frame.
+\frametitle{Motivation}
+\begin{columns}
+  \column{0.5\linewidth}
+\begin{itemize}
+\item Compound flooding - a high-impact, simultaneous interaction between multiple sources
+  \begin{itemize}
+  \item Storm surge from the ocean
+  \item River discharge
+  \item Rainfall
+  \end{itemize}
+\item Example: Hurricane Harvey (2017) - storm surge blocked drainage of rainfall runoff and amplified inundation
+\item Difficult to model due to the nonlinear nature of the interaction; no single model encompasses all flooding sources
+\end{itemize}
+
+  \column{0.5\linewidth}
+  \includegraphics[width=\linewidth]{compound.jpg}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{}
+  \includegraphics[width=0.9\linewidth]{houston.jpg} \\
+  Image source : blah
 \end{frame}
 
 \begin{frame}
   \frametitle{Computational Difficulties}
+  \begin{itemize}
+  \item Advanced Circulation Model (ADCIRC), JJ Westerink and R. Luettich in 2004. Galerkin finite element program that simulates coastal storm surge given wind input
+  \item Difficulty adding direct rainfall on ADCIRC due to the form of the equation (GWCE) and possibly the Galerkin method
+  \item Attempts have been made to couple ADCIRC with HEC-RAS by exchanging boundary conditions at the interface between the coast and mainland
+  \item This approach: add rainfall to the Discontinuous Galerkin Shallow Water Equation Model (DG-SWEM) by Kubatko (2007) based on ADCIRC
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Mathematical Model}
-  \includegraphics[width=0.5\textwidth]{bathy.png}
+  \centering
+  \includegraphics[width=0.8\textwidth]{domain.pdf}
 \end{frame}
 
 \begin{frame}
@@ -49,7 +80,7 @@ This is some text in the first frame. This is some text in the first frame. This
 \begin{frame}
   \frametitle{Compact Form of the Equations}
   Rewriting terms into matrix/vector form  gives
-  \begin{block}{The Shallow Water Equations (divergence form)}
+  \begin{block}{The Shallow Water Equations (conservation form)}
     \begin{align*}
     \dt{\mathbf{w}} + \nabla \cdot \mathbf{F}(\mathbf{w}) = \mathbf{r}(\mathbf{w})
     \end{align*}
@@ -68,7 +99,7 @@ This is some text in the first frame. This is some text in the first frame. This
 \end{frame}
 
 \begin{frame}
-  \frametitle{Computational Method}
+  \frametitle{Discretization}
   \begin{itemize}
   \item DG-SWEM uses the discontinuous Galerkin (DG) method to discretize in space and Runge-Kutta in time
   \item Combines advantages of FEM and FVM:
@@ -77,13 +108,31 @@ This is some text in the first frame. This is some text in the first frame. This
     \item Finite volume: designed for conservation laws, guarantees local mass conservation, stability achieved from numerical flux
     \end{itemize}
   \end{itemize}
+  \centering
   \includegraphics[width=0.5\textwidth]{cgdg.jpg}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Computational process in each timestep}
+  \begin{enumerate}
+  \item  State variables at timestep $n$
+    \begin{align}
+      \mathbf{w}^n = [\zeta^{(n)}, uH^n, vH^n]
+    \end{align}
+  \item Discretize in space using DG to get
+    \begin{align}
+        \Dt{\mathbf{w}^n} = L_h(\mathbf{w}^n)
+    \end{align}
+  \item Step in time using SSP Runge-Kutta to get
+      $\mathbf{w}^{(n+1)}$
+  \item Average the solution on each node
+  \end{enumerate}
 \end{frame}
 \begin{frame}
   \frametitle{Computational Domain}
   \begin{figure}[t]
     \centering
-    \includegraphics[width=0.7\textwidth]{120m_bath.jpg}
+    \includegraphics[width=0.75\textwidth]{120m_bath.jpg}
   \end{figure}
 \end{frame}
 
@@ -104,15 +153,31 @@ This is some text in the first frame. This is some text in the first frame. This
   \end{itemize}
 \end{frame}
 \begin{frame}
-  \frametitle{Parametric rainfall models}
+  \frametitle{R-CLIPER Rain Model}
   \begin{itemize}
-  \item R-CLIPER model (Panton, 2002)
-  \item IPET model
+  \item Based on the work of Lonfat et al. (2004) and DeMaria (2003)
+  \item Curve fitting using Tropical Rain Measurement Mission (TRMM)  rainfall data from storm between 1998-2002:
+    \begin{align}
+      TRR(r, V) =
+    \begin{cases}
+      T_0 + (T_m - T_0)(r/r_m), & r < r_m \\
+      T_m e^{-(r-rm/r_e)}, & r \geq r_m
+    \end{cases}
+    \end{align}
+    where
+    \begin{align*}
+      TRR &= \text{rain rate (inch/day) at a given point} \\
+      r &= \text{radius from the point to the center of the storm} \\
+      V &= \text{maximum wind speed}
+    \end{align*}
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Storm data}
+  \begin{itemize}
+  \item ADCIRC and DG-SWEM accepts wind and atmospheric pressure input in Best Track format
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -127,14 +192,53 @@ This is some text in the first frame. This is some text in the first frame. This
   \includegraphics[width=0.7\textwidth]{harvey.jpg}
 \end{frame}
 \begin{frame}
-  \frametitle{Results}
+  \frametitle{Results - Hydrograph Comparisons}
   \begin{itemize}
   \item Hydrographs
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Results (HMW)}
+  \frametitle{Results - High Water Marks Comparisons}
+  \begin{columns}
+    \column{0.5\linewidth}
+    \centering
+    \vspace{0.5cm}
+    \centering
+    DG-SWEM without rainfall
+    \includegraphics[width=\linewidth]{2008_norain.jpg}
+
+    \column{0.5\linewidth}
+    \centering
+    \vspace{0.5cm}
+    \centering
+    DG-SWEM with R-CLIPER
+    \includegraphics[width=\linewidth]{2008_rain.jpg}
+
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Results - High Water Marks Comparisons}
+  \begin{columns}
+    \column{0.5\linewidth}
+    \centering
+    \vspace{0.5cm}
+    \centering
+    DG-SWEM with observed rain
+    \includegraphics[width=\linewidth]{2008_owi.jpg}
+
+    \column{0.5\linewidth}
+    \centering
+    \vspace{0.5cm}
+    \centering
+    DG-SWEM with R-CLIPER
+    \includegraphics[width=\linewidth]{2008_rain.jpg}
+
+  \end{columns}
+\end{frame}
+\begin{frame}
+  \frametitle{Conclusion}
 \end{frame}
 
 \end{document}
