@@ -6,7 +6,8 @@
 \date{November 2022}
 
 \usepackage{caption}
-\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{soul}
 
 %\usetheme{Madrid}
 \newcommand\dt[1]{\frac{\partial #1}{\partial t}}
@@ -34,7 +35,11 @@
 \end{itemize}
 
   \column{0.5\linewidth}
-  \includegraphics[width=\linewidth]{compound.jpg}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{compound.jpg}
+  \end{figure}
+    \tiny Image from \url{http://sites.utexas.edu/climatesecurity/2020/03/25/flooding-from-all-directions-how-compound-flooding-threatens-urban-areas-in-oceania/}
 \end{columns}
 \end{frame}
 
@@ -58,7 +63,8 @@
 \begin{frame}
   \frametitle{Mathematical Model}
   \centering
-  \includegraphics[width=0.8\textwidth]{domain.pdf}
+  \includegraphics[width=0.9\textwidth]{shallow.png} \\
+  \footnotesize Diagram from H. Gunawan.
 \end{frame}
 
 \begin{frame}
@@ -116,8 +122,11 @@
     \item Finite volume: designed for conservation laws, guarantees local mass conservation, stability achieved from numerical flux
     \end{itemize}
   \end{itemize}
-  \centering
-  \includegraphics[width=0.5\textwidth]{cgdg.jpg}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{cgdg.jpg}
+    \caption*{Image from \url{https://mathstats.uncg.edu/applied/dgfiniteelement/}}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -147,29 +156,31 @@
 \begin{frame}
   \frametitle{Incorporating rainfall}
   \begin{itemize}
-  \item Manually specify rain intensity (m/s) at each node in the grid
+  \item Directly specify rain intensity (m/s) at each node in the grid
     \begin{itemize}
-    \item Useful for hindcasting given avaiable rain data
-    \item Need to preprocess additional output
+    \item Can be used in hindcasting, given observed rain data
+    \item Need to preprocess different types rain data
     \end{itemize}
   \item Use parametric rainfall models
     \begin{itemize}
-    \item Rain intensity at each point can be approximated by storm data
+    \item Rain intensity at each point can be estimated using storm data
     \item If works, useful for forecasting
-    \item Existing parametric models have been studied (see paper)
+    \item Comparison of existing parametric models in \\
+      \vspace{0.1cm}
+      \ul{Brackins and Kalyanapu (2019). \emph{Evaluation of Parametric Precipitation Models in Reproducing Tropical Cyclone Rainfall Patterns}. Journal of Hydrology.}
     \end{itemize}
   \end{itemize}
 \end{frame}
 \begin{frame}
   \frametitle{R-CLIPER Rain Model}
   \begin{itemize}
-  \item Based on the work of Lonfat et al. (2004) and DeMaria (2003)
-  \item Curve fitting using Tropical Rain Measurement Mission (TRMM)  rainfall data from storm between 1998-2002:
+  \item Based on the work of Lonfat et al. (2004) and Marks and DeMaria (2003)
+  \item Curve fitting using Tropical Rainfall Measurement Mission (TRMM)  rainfall data from storm between 1998-2002:
     \begin{align}
       TRR(r, V) =
     \begin{cases}
       T_0 + (T_m - T_0)(r/r_m), & r < r_m \\
-      T_m e^{-(r-rm/r_e)}, & r \geq r_m
+      T_m e^{-((r-rm)/r_e)}, & r \geq r_m
     \end{cases}
     \end{align}
     where
@@ -193,16 +204,16 @@
   \begin{columns}
     \column{0.5\linewidth}
   \begin{itemize}
-  \item A good representative for compound flooding
-  \item Total rain: 51 inches in the Houston city area
+  \item Maximum total rain of 51 inches in the Houston city area
   \item Surge relatively low
-  \item Run on TX 2008 mesh from Aug - Sep 2017
-  \item Used 3,000 CPU, took about 12 hours on the Texas Advanced Computing Center (TACC)
+  \item Simulation dates: August 23 - September 2, 2017
+  \item Used 3,200 processors, took about 13 hours on the Texas Advanced Computing Center (TACC)
   \end{itemize}
 
   \column{0.5\linewidth}
   \centering
-  \includegraphics[width=0.8\linewidth]{harvey_cropped.png}
+  \includegraphics[width=0.8\linewidth]{harvey_cropped.png} \\
+  \footnotesize Track of Hurricane Harvey
   \end{columns}
 
 \end{frame}
@@ -210,13 +221,24 @@
 
 \begin{frame}
   \frametitle{Hydrograph locations}
+  \centering
+  \includegraphics[width=0.9\linewidth]{stations.png}
 \end{frame}
 
 \begin{frame}
   \frametitle{Results - Hydrograph Comparisons}
-  \begin{itemize}
-  \item Hydrographs
-  \end{itemize}
+  \centering
+  \includegraphics[width=0.9\linewidth]{port_arthur.png}
+  \centering
+  \includegraphics[width=0.9\linewidth]{sabine_pass.png}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Results - Hydrograph Comparisons}
+  \centering
+  \includegraphics[width=0.9\linewidth]{matagorda.png}
+  \centering
+  \includegraphics[width=0.9\linewidth]{aransas_wildlife.png}
 \end{frame}
 
 \begin{frame}
