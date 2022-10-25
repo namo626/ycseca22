@@ -213,7 +213,7 @@
   \column{0.5\linewidth}
   \centering
   \includegraphics[width=0.8\linewidth]{harvey_cropped.png} \\
-  \footnotesize Track of Hurricane Harvey
+  \footnotesize Track of Hurricane Harvey (2017)
   \end{columns}
 
 \end{frame}
@@ -223,6 +223,15 @@
   \frametitle{Hydrograph locations}
   \centering
   \includegraphics[width=0.9\linewidth]{stations.png}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Results - Hydrograph Comparisons}
+  \centering
+  \includegraphics[width=0.9\linewidth]{port_aransas.png}
+  \centering
+  \includegraphics[width=0.9\linewidth]{morgans_point.png}
 \end{frame}
 
 \begin{frame}
@@ -236,9 +245,25 @@
 \begin{frame}
   \frametitle{Results - Hydrograph Comparisons}
   \centering
+  \includegraphics[width=0.9\linewidth]{manchester.png}
+  \centering
+  \includegraphics[width=0.9\linewidth]{south_bird.png}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Results - Hydrograph Comparisons}
+  \centering
   \includegraphics[width=0.9\linewidth]{matagorda.png}
   \centering
   \includegraphics[width=0.9\linewidth]{aransas_wildlife.png}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Results - Hydrograph Comparisons}
+  \centering
+  \includegraphics[width=0.9\linewidth]{baffin_bay.png}
+  \centering
+  \includegraphics[width=0.9\linewidth]{sargent.png}
 \end{frame}
 
 \begin{frame}
@@ -282,6 +307,20 @@
 \end{frame}
 \begin{frame}
   \frametitle{Conclusion and current work}
+  \begin{itemize}
+  \item Incorportation of rainfall slightly raises overall surface elevation
+  \item High water mark comparisons indicate a lot overprediction at certain points by both parametric and observed rain
+  \item Underpredictions after peak for locations along the coast; no consistent trend of parametric vs. observed rain
+  \end{itemize}
+  Work in progress:
+  \begin{itemize}
+  \item Investigate the spatial distribution of high water marks
+  \item Test other parametric rain models (IPET is being incorporated)
+  \item Different ways of processing rain data, e.g. interpolation choices, distribution of nodal rain over elements
+  \item Test other datasets
+  \item Increase DG approximation order to decrease model error
+  \end{itemize}
 \end{frame}
+
 
 \end{document}
