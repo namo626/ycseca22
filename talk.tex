@@ -1,13 +1,14 @@
 \documentclass[10pt]{oden_beamer}
 %Information to be included in the title page:
 \title{Numerical Simulation of Compound Flooding using Parametric Rainfall Models}
-\author{Chayanon (Namo) Wichitrnithed \inst{1}, Eirik Valseth \inst{1}, Younghun Kang \inst{2}, Mackenzie Hudson \inst{2}, Ethan Kubatko \inst{2}, Clint Dawson \inst{1}}
+\author{Chayanon (Namo) Wichitrnithed\inst{1}, Eirik Valseth\inst{1}, Younghun Kang\inst{2}, Mackenzie Hudson\inst{2}, Ethan Kubatko\inst{2}, Clint Dawson\inst{1}}
 \institute{\inst{1} Computational Hydraulics Group, University of Texas at Austin \\ \inst{2} Computational Hydrodynamics and Informatics Lab, Ohio State University}
 \date{November 2022}
 
 \usepackage{caption}
 \usepackage{xurl}
 \usepackage{soul}
+\usepackage{graphicx}
 
 %\usetheme{Madrid}
 \newcommand\dt[1]{\frac{\partial #1}{\partial t}}
@@ -53,7 +54,7 @@
 \begin{frame}
   \frametitle{Computational Difficulties}
   \begin{itemize}
-  \item Advanced Circulation model (ADCIRC) (Luettich and Westerink, 2004). Galerkin finite element program that simulates coastal storm surge given wind input
+  \item Advanced Circulation model (ADCIRC) (Luettich and Westerink, 2004). A Fortran finite element program that simulates coastal storm surge given wind input
   \item Runoff effects can be added to ADCIRC via flux boundary conditions from gauge data
   \item Difficulty adding direct rainfall on ADCIRC due to the form of the equation and possibly the continuous Galerkin method
   \item This work: adding rainfall to the Discontinuous Galerkin Shallow Water Equation Model (DG-SWEM) (Kubatko, 2006) based on ADCIRC
@@ -62,9 +63,14 @@
 
 \begin{frame}
   \frametitle{Mathematical Model}
-  \centering
-  \includegraphics[width=0.9\textwidth]{shallow.png} \\
-  \footnotesize Diagram from H. Gunawan.
+  \begin{figure}[h]
+    \centering
+    \scalebox{.85}{\input{domain.pdf_t} }%
+  \end{figure}
+  $\zeta$ = surface elevation (positive above geoid) \\
+  $h$ = bathymetric depth (positive below geoid) \\
+  $H$ = total water depth (always greater than 0)
+  % \includegraphics[width=0.9\textwidth]{domain.pdf} \\
 \end{frame}
 
 \begin{frame}
@@ -194,9 +200,8 @@
 
 \begin{frame}
   \frametitle{Storm data}
-  \begin{itemize}
-  \item ADCIRC and DG-SWEM accepts wind and atmospheric pressure input in Best Track format
-  \end{itemize}
+  \centering
+  \includegraphics[width=0.9\textwidth]{flowchart.pdf}
 \end{frame}
 
 \begin{frame}
@@ -207,6 +212,7 @@
   \item Maximum total rain of 51 inches in the Houston city area
   \item Surge relatively low
   \item Simulation dates: August 23 - September 2, 2017
+  \item Timestep = 0.5 seconds
   \item Used 3,200 processors, took about 13 hours on the Texas Advanced Computing Center (TACC)
   \end{itemize}
 
@@ -220,38 +226,13 @@
 
 
 \begin{frame}
-  \frametitle{Hydrograph locations}
+  \frametitle{Water level gauge locations}
   \centering
-  \includegraphics[width=0.9\linewidth]{stations.png}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{Results - Hydrograph Comparisons}
-  \centering
-  \includegraphics[width=0.9\linewidth]{port_aransas.png}
-  \centering
-  \includegraphics[width=0.9\linewidth]{morgans_point.png}
+  \includegraphics[width=0.9\linewidth]{stations2.png}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Results - Hydrograph Comparisons}
-  \centering
-  \includegraphics[width=0.9\linewidth]{port_arthur.png}
-  \centering
-  \includegraphics[width=0.9\linewidth]{sabine_pass.png}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Results - Hydrograph Comparisons}
-  \centering
-  \includegraphics[width=0.9\linewidth]{manchester.png}
-  \centering
-  \includegraphics[width=0.9\linewidth]{south_bird.png}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Results - Hydrograph Comparisons}
+  \frametitle{Results - Water Level Comparisons}
   \centering
   \includegraphics[width=0.9\linewidth]{matagorda.png}
   \centering
@@ -259,12 +240,38 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Results - Hydrograph Comparisons}
+  \frametitle{Results - Water Level Comparisons}
   \centering
   \includegraphics[width=0.9\linewidth]{baffin_bay.png}
   \centering
   \includegraphics[width=0.9\linewidth]{sargent.png}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Results - Water Level Comparisons}
+  \centering
+  \includegraphics[width=0.9\linewidth]{port_aransas.png}
+  \centering
+  \includegraphics[width=0.9\linewidth]{morgans_point.png}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Results - Water Level Comparisons}
+%   \centering
+%   \includegraphics[width=0.9\linewidth]{port_arthur.png}
+%   \centering
+%   \includegraphics[width=0.9\linewidth]{sabine_pass.png}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Results - Water Level Comparisons}
+%   \centering
+%   \includegraphics[width=0.9\linewidth]{manchester.png}
+%   \centering
+%   \includegraphics[width=0.9\linewidth]{south_bird.png}
+% \end{frame}
+
+
 
 \begin{frame}
   \frametitle{Results - High Water Marks Comparisons}
@@ -316,9 +323,10 @@
   \begin{itemize}
   \item Investigate the spatial distribution of high water marks
   \item Test other parametric rain models (IPET is being incorporated)
+  \item Incorporate river discharge fluxes as boundary conditions
   \item Different ways of processing rain data, e.g. interpolation choices, distribution of nodal rain over elements
   \item Test other datasets
-  \item Increase DG approximation order to decrease model error
+  %\item Increase DG approximation order to decrease model error
   \end{itemize}
 \end{frame}
 
