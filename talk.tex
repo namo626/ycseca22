@@ -135,22 +135,23 @@
   \end{figure}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Computational process in each timestep}
-  \begin{enumerate}
-  \item  State variables at timestep $n$
-    \begin{align}
-      \mathbf{w}^n = [\zeta^{(n)}, uH^n, vH^n]
-    \end{align}
-  \item Discretize in space using DG to get
-    \begin{align}
-        \Dt{\mathbf{w}^n} = L_h(\mathbf{w}^n)
-    \end{align}
-  \item Step in time using SSP Runge-Kutta to get
-      $\mathbf{w}^{(n+1)}$
-  \item Average the solution on each node
-  \end{enumerate}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Computational process in each timestep}
+%   \begin{enumerate}
+%   \item  State variables at timestep $n$
+%     \begin{align}
+%       \mathbf{w}^n = [\zeta^{(n)}, uH^n, vH^n]
+%     \end{align}
+%   \item Discretize in space using DG to get
+%     \begin{align}
+%         \Dt{\mathbf{w}^n} = L_h(\mathbf{w}^n)
+%     \end{align}
+%   \item Step in time using SSP Runge-Kutta to get
+%       $\mathbf{w}^{(n+1)}$
+%   \item Average the solution on each node
+%   \end{enumerate}
+% \end{frame}
+
 \begin{frame}
   \frametitle{Computational Domain}
   \begin{figure}[t]
@@ -199,7 +200,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Storm data}
+  \frametitle{Program structure}
   \centering
   \includegraphics[width=0.9\textwidth]{flowchart.pdf}
 \end{frame}
@@ -324,7 +325,7 @@
   \item Investigate the spatial distribution of high water marks
   \item Test other parametric rain models (IPET is being incorporated)
   \item Incorporate river discharge fluxes as boundary conditions
-  \item Different ways of processing rain data, e.g. interpolation choices, distribution of nodal rain over elements
+  %\item Different ways of processing rain data, e.g. interpolation choices, distribution of nodal rain over elements
   \item Test other datasets
   %\item Increase DG approximation order to decrease model error
   \end{itemize}
